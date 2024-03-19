@@ -1,0 +1,18 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: web-forum
+  datasource:
+    url: jdbc:h2:mem:web_forum_db;DB_CLOSE_DELAY=-1
+    username: admin
+    password:
+    driver-class-name: org.h2.Driver
+    initialization-mode: always
+  jpa:
+    show-sql: false
+    properties:
+      hibernate.dialect: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: create-drop
