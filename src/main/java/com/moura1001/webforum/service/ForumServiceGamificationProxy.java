@@ -32,7 +32,13 @@ public class ForumServiceGamificationProxy implements ForumService {
 
     @Override
     public void adicionarComentario(String usuario, Long topicoId, String comentario) {
+        forumServiceReal.adicionarComentario(usuario, topicoId, comentario);
 
+        Usuario u = new Usuario(usuario, "");
+        Points p = new Points("PARTICIPATION", u, 3l);
+        Badge b = new Badge("LET ME ADD", u);
+        achievementStorage.adicionarAchievement(usuario, p);
+        achievementStorage.adicionarAchievement(usuario, b);
     }
 
     @Override

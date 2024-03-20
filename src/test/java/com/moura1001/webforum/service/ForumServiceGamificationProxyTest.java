@@ -1,10 +1,8 @@
 package com.moura1001.webforum.service;
 
-import com.moura1001.webforum.model.Achievement;
-import com.moura1001.webforum.model.Badge;
-import com.moura1001.webforum.model.Points;
-import com.moura1001.webforum.model.Usuario;
+import com.moura1001.webforum.model.*;
 import com.moura1001.webforum.repository.AchievementRepository;
+import com.moura1001.webforum.repository.TopicoRepository;
 import com.moura1001.webforum.repository.UsuarioRepository;
 import com.moura1001.webforum.service.storage.AchievementStorage;
 import org.junit.jupiter.api.BeforeAll;
@@ -27,6 +25,8 @@ public class ForumServiceGamificationProxyTest {
     @Autowired
     private UsuarioRepository usuarioRepository;
     @Autowired
+    private TopicoRepository topicoRepository;
+    @Autowired
     private AchievementRepository achievementRepository;
     @Autowired
     @Qualifier("relationalDatabaseAchievementStorage")
@@ -43,6 +43,10 @@ public class ForumServiceGamificationProxyTest {
         Usuario usuario3 = new Usuario("user2", "Usuário 3");
         List<Usuario> usuarios = List.of(usuario1, usuario2, usuario3);
         usuarioRepository.saveAllAndFlush(usuarios);
+        Topico topico1 = new Topico(1l, "Tópico 1", "Conteúdo 1", usuario1);
+        Topico topico2 = new Topico(2l, "Tópico 2", "Conteúdo 2", usuario3);
+        List<Topico> topicos = List.of(topico1, topico2);
+        topicoRepository.saveAllAndFlush(topicos);
     }
 
     @BeforeEach
@@ -82,6 +86,23 @@ public class ForumServiceGamificationProxyTest {
         assertEquals(15, points.getQuantidadePontos());
 
         achievement = achievementStorage.getAchievement("moura", "I CAN TALK");
+        assertNotNull(achievement);
+        assertInstanceOf(Badge.class, achievement);
+    }
+
+    @Test
+    void aoAdicionarUmComentarioPelaPrimeiraVezDeveGanharOBadgeLetMeAdd() {
+        forumService.adicionarComentario("moura", 1l, "Meu primeiro comentário");
+        List<Achievement> achievements = achievementStorage.getAllAchievements("moura");
+        assertEquals(2, achievements.size());
+
+        Achievement achievement = achievementStorage.getAchievement("moura", "PARTICIPATION");
+        assertNotNull(achievement);
+        assertInstanceOf(Points.class, achievement);
+        Points points = (Points) achievement;
+        assertEquals(3, points.getQuantidadePontos());
+
+        achievement = achievementStorage.getAchievement("moura", "LET ME ADD");
         assertNotNull(achievement);
         assertInstanceOf(Badge.class, achievement);
     }
