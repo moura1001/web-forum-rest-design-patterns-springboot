@@ -31,5 +31,9 @@ public class Points extends Achievement {
             Points p = (Points) a;
             quantidadePontos += p.quantidadePontos;
         }
+
+        if (observador != null) {
+            observador.achievementUpdate(usuario.getLogin(), this);
+        }
     }
 }

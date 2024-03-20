@@ -5,6 +5,7 @@ import com.moura1001.webforum.repository.AchievementRepository;
 import com.moura1001.webforum.repository.TopicoRepository;
 import com.moura1001.webforum.repository.UsuarioRepository;
 import com.moura1001.webforum.service.storage.AchievementStorage;
+import com.moura1001.webforum.service.storage.AchievementStorageFactory;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -28,8 +29,9 @@ public class ForumServiceGamificationProxyTest {
     private TopicoRepository topicoRepository;
     @Autowired
     private AchievementRepository achievementRepository;
+
     @Autowired
-    @Qualifier("relationalDatabaseAchievementStorage")
+    private AchievementStorageFactory achievementStorageFactory;
     private AchievementStorage achievementStorage;
 
     @Autowired
@@ -38,6 +40,8 @@ public class ForumServiceGamificationProxyTest {
 
     @BeforeAll
     void init() {
+        achievementStorage = achievementStorageFactory.getAchievementStorage();
+
         Usuario usuario1 = new Usuario("user1", "Usuário 1");
         Usuario usuario2 = new Usuario("moura", "Genival Moura");
         Usuario usuario3 = new Usuario("user2", "Usuário 3");
@@ -160,6 +164,25 @@ public class ForumServiceGamificationProxyTest {
         assertInstanceOf(Badge.class, achievement);
 
         achievement = achievementStorage.getAchievement("moura", "LET ME ADD");
+        assertNotNull(achievement);
+        assertInstanceOf(Badge.class, achievement);
+    }
+
+    @Test
+    void aoAcumular100PontosDoTipoCreationOUsuarioDeveReceberABadgeInventor() {
+        Usuario u = new Usuario("moura", "Genival Moura");
+        achievementStorage.adicionarAchievement("moura", new Points("CREATION", u, 99l));
+        forumService.gostarTopico("moura", 2l, "randomUser");
+        List<Achievement> achievements = achievementStorage.getAllAchievements("moura");
+        assertEquals(2, achievements.size());
+
+        Achievement achievement = achievementStorage.getAchievement("moura", "CREATION");
+        assertNotNull(achievement);
+        assertInstanceOf(Points.class, achievement);
+        Points points = (Points) achievement;
+        assertEquals(100, points.getQuantidadePontos());
+
+        achievement = achievementStorage.getAchievement("moura", "INVENTOR");
         assertNotNull(achievement);
         assertInstanceOf(Badge.class, achievement);
     }

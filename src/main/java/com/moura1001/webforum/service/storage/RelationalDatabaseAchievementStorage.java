@@ -2,6 +2,8 @@ package com.moura1001.webforum.service.storage;
 
 import com.moura1001.webforum.model.Achievement;
 import com.moura1001.webforum.repository.AchievementRepository;
+import com.moura1001.webforum.service.achievement.AchievementObserver;
+import com.moura1001.webforum.service.achievement.AchievementObserverList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -13,6 +15,9 @@ public class RelationalDatabaseAchievementStorage implements AchievementStorage 
     @Autowired
     private AchievementRepository achievementRepository;
 
+    @Autowired
+    private AchievementObserverList achievementObserverList;
+
     @Override
     public void adicionarAchievement(String usuario, Achievement a) {
         Optional<Achievement> achievement =  achievementRepository.findByNomeToUsuario(a.getNome(), usuario);
@@ -20,6 +25,10 @@ public class RelationalDatabaseAchievementStorage implements AchievementStorage 
             achievementRepository.save(a);
         else {
             Achievement updatedAchievement = achievement.get();
+            for (AchievementObserver observador : achievementObserverList.getOBSERVADORES()) {
+                updatedAchievement.adicionarObservador(observador);
+            }
+
             updatedAchievement.adicionar(a);
             achievementRepository.save(updatedAchievement);
         }

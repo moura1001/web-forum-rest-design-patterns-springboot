@@ -1,5 +1,6 @@
 package com.moura1001.webforum.model;
 
+import com.moura1001.webforum.service.achievement.AchievementObserver;
 import jakarta.persistence.*;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
@@ -21,6 +22,9 @@ public abstract class Achievement {
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "login")
     protected Usuario usuario;
+
+    @Transient
+    protected AchievementObserver observador;
 
     protected Achievement(){
     }
@@ -55,5 +59,19 @@ public abstract class Achievement {
 
     public void setUsuario(Usuario usuario) {
         this.usuario = usuario;
+    }
+
+    public void adicionarObservador(AchievementObserver observador) {
+        if (observador == null)
+            return;
+
+        if (observador.deveAdicionarObservador(this)) {
+
+            this.observador = observador;
+        }
+    }
+
+    public void removerObservador() {
+        observador = null;
     }
 }
