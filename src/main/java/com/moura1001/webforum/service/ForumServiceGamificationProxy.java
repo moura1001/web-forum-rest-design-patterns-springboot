@@ -43,11 +43,19 @@ public class ForumServiceGamificationProxy implements ForumService {
 
     @Override
     public void gostarTopico(String usuario, Long topicoId, String usuarioTopico) {
+        forumServiceReal.gostarTopico(usuario, topicoId, usuarioTopico);
 
+        Usuario u = new Usuario(usuario, "");
+        Points p = new Points("CREATION", u, 1l);
+        achievementStorage.adicionarAchievement(usuario, p);
     }
 
     @Override
     public void gostarComentario(String usuario, Long topicoId, Long comentarioId, String usuarioComentario) {
+        forumServiceReal.gostarComentario(usuario, topicoId, comentarioId, usuarioComentario);
 
+        Usuario u = new Usuario(usuario, "");
+        Points p = new Points("PARTICIPATION", u, 1l);
+        achievementStorage.adicionarAchievement(usuario, p);
     }
 }
