@@ -132,4 +132,35 @@ public class ForumServiceGamificationProxyTest {
         Points points = (Points) achievement;
         assertEquals(1, points.getQuantidadePontos());
     }
+
+    @Test
+    void deveGanharTodosOsBadgesRelacionadosAAlgumaDeSuasInteracoesNoForum() {
+        forumService.adicionarTopico("moura", "Meu primeiro tópico", "Conteúdo...");
+        forumService.adicionarComentario("moura", 1l, "Meu primeiro comentário");
+        forumService.adicionarTopico("moura", "Meu segundo tópico", "Conteúdo...");
+        forumService.gostarTopico("moura", 2l, "randomUser");
+        forumService.gostarComentario("moura", 2l, 1l, "randomUser");
+        List<Achievement> achievements = achievementStorage.getAllAchievements("moura");
+        assertEquals(4, achievements.size());
+
+        Achievement achievement = achievementStorage.getAchievement("moura", "CREATION");
+        assertNotNull(achievement);
+        assertInstanceOf(Points.class, achievement);
+        Points points = (Points) achievement;
+        assertEquals(11, points.getQuantidadePontos());
+
+        achievement = achievementStorage.getAchievement("moura", "PARTICIPATION");
+        assertNotNull(achievement);
+        assertInstanceOf(Points.class, achievement);
+        points = (Points) achievement;
+        assertEquals(4, points.getQuantidadePontos());
+
+        achievement = achievementStorage.getAchievement("moura", "I CAN TALK");
+        assertNotNull(achievement);
+        assertInstanceOf(Badge.class, achievement);
+
+        achievement = achievementStorage.getAchievement("moura", "LET ME ADD");
+        assertNotNull(achievement);
+        assertInstanceOf(Badge.class, achievement);
+    }
 }
