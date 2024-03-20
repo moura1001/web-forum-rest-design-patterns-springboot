@@ -31,6 +31,8 @@ public abstract class Achievement {
         this.login = usuario.getLogin();
     }
 
+    public abstract void adicionar(Achievement a);
+
     public String getNome() {
         return nome;
     }

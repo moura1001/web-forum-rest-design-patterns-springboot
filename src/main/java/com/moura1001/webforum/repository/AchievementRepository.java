@@ -13,4 +13,7 @@ public interface AchievementRepository extends JpaRepository<Achievement, String
 
     @Query("SELECT a FROM Achievement a WHERE a.usuario.login = :login AND a.nome = :nome")
     Optional<Achievement> findByNomeToUsuario(String nome, String login);
+
+    @Query("SELECT COUNT(a)>0 FROM Achievement a WHERE a.usuario.login = :login AND a.nome = :nome")
+    boolean existsByNomeToUsuario(String nome, String login);
 }

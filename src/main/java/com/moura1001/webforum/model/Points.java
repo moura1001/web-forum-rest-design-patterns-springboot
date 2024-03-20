@@ -24,4 +24,12 @@ public class Points extends Achievement {
     public Long getQuantidadePontos() {
         return quantidadePontos;
     }
+
+    @Override
+    public void adicionar(Achievement a) {
+        if (a instanceof Points) {
+            Points p = (Points) a;
+            quantidadePontos += p.quantidadePontos;
+        }
+    }
 }

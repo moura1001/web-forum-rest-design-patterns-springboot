@@ -10,4 +10,8 @@ public class Badge extends Achievement {
     public Badge(String nome, Usuario usuario) {
         super(nome, usuario);
     }
+
+    @Override
+    public void adicionar(Achievement a) {
+    }
 }
