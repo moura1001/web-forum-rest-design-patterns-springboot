@@ -20,4 +20,8 @@ public class Points extends Achievement {
         super(nome, usuario);
         this.quantidadePontos = quantidadePontos;
     }
+
+    public Long getQuantidadePontos() {
+        return quantidadePontos;
+    }
 }

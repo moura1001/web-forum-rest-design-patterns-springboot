@@ -1,6 +1,8 @@
 package com.moura1001.webforum.model;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 @Entity
 @Table(name = "comentarios")
@@ -13,11 +15,15 @@ public class Comentario {
     @Column(nullable = false, length = 2048)
     private String conteudo;
 
+    //@ManyToOne(cascade = CascadeType.REMOVE)
     @ManyToOne
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "login")
     private Usuario usuario;
 
+    //@ManyToOne(cascade = CascadeType.REMOVE)
     @ManyToOne
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "topico_id")
     private Topico topico;
 

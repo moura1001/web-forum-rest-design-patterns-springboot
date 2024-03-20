@@ -41,13 +41,6 @@ class ComentarioRepositoryTest {
         topicoRepository.saveAllAndFlush(topicos);
     }
 
-    @AfterAll
-    void finish() {
-        comentarioRepository.deleteAll();
-        topicoRepository.deleteAll();
-        usuarioRepository.deleteAll();
-    }
-
     @BeforeEach
     void setUp() {
         comentarioRepository.deleteAll();

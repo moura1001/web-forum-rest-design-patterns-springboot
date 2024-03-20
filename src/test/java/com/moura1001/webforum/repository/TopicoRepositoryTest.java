@@ -32,12 +32,6 @@ class TopicoRepositoryTest {
         usuarioRepository.saveAllAndFlush(usuarios);
     }
 
-    @AfterAll
-    void finish() {
-        topicoRepository.deleteAll();
-        usuarioRepository.deleteAll();
-    }
-
     @BeforeEach
     void setUp() {
         topicoRepository.deleteAll();

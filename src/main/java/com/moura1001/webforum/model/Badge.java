@@ -8,7 +8,6 @@ public class Badge extends Achievement {
     }
 
     public Badge(String nome, Usuario usuario) {
-        this.nome = nome;
-        this.usuario = usuario;
+        super(nome, usuario);
     }
 }

@@ -1,10 +1,7 @@
 package com.moura1001.webforum.repository;
 
 import com.moura1001.webforum.model.Usuario;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
@@ -21,8 +18,12 @@ class UsuarioRepositoryTest {
     @Autowired
     private UsuarioRepository usuarioRepository;
 
-    @AfterAll
-    void finish() {
+    @Autowired
+    private AchievementRepository achievementRepository;
+
+    @BeforeAll
+    void init() {
+        achievementRepository.deleteAll();
         usuarioRepository.deleteAll();
     }
 

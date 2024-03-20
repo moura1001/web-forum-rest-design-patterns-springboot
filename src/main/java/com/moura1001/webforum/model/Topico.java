@@ -1,6 +1,8 @@
 package com.moura1001.webforum.model;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 @Entity
 @Table(name = "topicos")
@@ -16,7 +18,9 @@ public class Topico {
     @Column(nullable = false, length = 1024)
     private String conteudo;
 
+    //@ManyToOne(cascade = CascadeType.REMOVE)
     @ManyToOne
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "login")
     private Usuario usuario;
 
