@@ -18,15 +18,6 @@ class UsuarioRepositoryTest {
     @Autowired
     private UsuarioRepository usuarioRepository;
 
-    @Autowired
-    private AchievementRepository achievementRepository;
-
-    @BeforeAll
-    void init() {
-        achievementRepository.deleteAll();
-        usuarioRepository.deleteAll();
-    }
-
     @BeforeEach
     void setUp() {
         usuarioRepository.deleteAll();
