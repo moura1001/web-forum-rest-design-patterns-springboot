@@ -6,6 +6,7 @@ import com.moura1001.webforum.model.Points;
 import com.moura1001.webforum.model.Usuario;
 import com.moura1001.webforum.repository.AchievementRepository;
 import com.moura1001.webforum.repository.UsuarioRepository;
+import com.moura1001.webforum.service.storage.AchievementStorage;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -16,7 +17,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.util.List;
-import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -28,6 +28,9 @@ public class ForumServiceGamificationProxyTest {
     private UsuarioRepository usuarioRepository;
     @Autowired
     private AchievementRepository achievementRepository;
+    @Autowired
+    @Qualifier("relationalDatabaseAchievementStorage")
+    private AchievementStorage achievementStorage;
 
     @Autowired
     @Qualifier("forumServiceGamificationProxy")
@@ -50,18 +53,18 @@ public class ForumServiceGamificationProxyTest {
     @Test
     void aoAdicionarUmTopicoPelaPrimeiraVezDeveGanharOBadgeICanTalk() {
         forumService.adicionarTopico("moura", "Meu primeiro tópico", "Conteúdo Tópico");
-        List<Achievement> achievements = achievementRepository.findAllByLoginUsuario("moura");
+        List<Achievement> achievements = achievementStorage.getAllAchievements("moura");
         assertEquals(2, achievements.size());
 
-        Optional<Achievement> achievement = achievementRepository.findByNomeToUsuario("CREATION", "moura");
-        assertTrue(achievement.isPresent());
-        assertInstanceOf(Points.class, achievement.get());
-        Points points = (Points) achievement.get();
+        Achievement achievement = achievementStorage.getAchievement("moura", "CREATION");
+        assertNotNull(achievement);
+        assertInstanceOf(Points.class, achievement);
+        Points points = (Points) achievement;
         assertEquals(5, points.getQuantidadePontos());
 
-        achievement = achievementRepository.findByNomeToUsuario("I CAN TALK", "moura");
-        assertTrue(achievement.isPresent());
-        assertInstanceOf(Badge.class, achievement.get());
+        achievement = achievementStorage.getAchievement("moura", "I CAN TALK");
+        assertNotNull(achievement);
+        assertInstanceOf(Badge.class, achievement);
     }
 
     @Test
@@ -69,17 +72,17 @@ public class ForumServiceGamificationProxyTest {
         forumService.adicionarTopico("moura", "Meu primeiro tópico", "Conteúdo...");
         forumService.adicionarTopico("moura", "Meu segundo tópico", "Conteúdo...");
         forumService.adicionarTopico("moura", "Meu terceiro tópico", "Conteúdo...");
-        List<Achievement> achievements = achievementRepository.findAllByLoginUsuario("moura");
+        List<Achievement> achievements = achievementStorage.getAllAchievements("moura");
         assertEquals(2, achievements.size());
 
-        Optional<Achievement> achievement = achievementRepository.findByNomeToUsuario("CREATION", "moura");
-        assertTrue(achievement.isPresent());
-        assertInstanceOf(Points.class, achievement.get());
-        Points points = (Points) achievement.get();
+        Achievement achievement = achievementStorage.getAchievement("moura", "CREATION");
+        assertNotNull(achievement);
+        assertInstanceOf(Points.class, achievement);
+        Points points = (Points) achievement;
         assertEquals(15, points.getQuantidadePontos());
 
-        achievement = achievementRepository.findByNomeToUsuario("I CAN TALK", "moura");
+        achievement = achievementStorage.getAchievement("moura", "I CAN TALK");
         assertNotNull(achievement);
-        assertInstanceOf(Badge.class, achievement.get());
+        assertInstanceOf(Badge.class, achievement);
     }
 }
