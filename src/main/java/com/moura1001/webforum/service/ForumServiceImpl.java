@@ -59,6 +59,13 @@ public class ForumServiceImpl implements ForumService {
     }
 
     @Override
+    public Comentario obterComentario(Long comentarioId) {
+        return comentarioRepository.findById(comentarioId).orElseThrow(() -> {
+            throw new RuntimeException("comentário não existe");
+        });
+    }
+
+    @Override
     public void gostarTopico(String usuario, Long topicoId, String usuarioTopico) {
 
     }

@@ -44,6 +44,16 @@ public class TopicoController {
         return ResponseEntity.ok(new TopicoViewDetail(t, comentarios));
     }
 
+    @PutMapping("/{id}/curtir")
+    public ResponseEntity<String> curtirTopico(
+            @PathVariable Long id,
+            @RequestParam(value = "login") String login
+    ) {
+        Topico t = forumService.obterTopico(id);
+        forumService.gostarTopico(login, id, t.getUsuario().getLogin());
+        return ResponseEntity.ok("tópico curtido com sucesso");
+    }
+
     @PostMapping("/{id}/adicionarComentario")
     public ResponseEntity<String> salvarComentario(
             @PathVariable Long id,
@@ -52,5 +62,17 @@ public class TopicoController {
         return ResponseEntity.created(
                 URI.create("/forum/api/v1/topicos/"+id+"/comentarios/"+comentarioSalvo.getId())
         ).body("comentário adicionado com sucesso");
+    }
+
+    @PutMapping("/{topicoId}/comentarios/{comentarioId}/curtir")
+    public ResponseEntity<String> curtirComentario(
+            @PathVariable Long topicoId,
+            @PathVariable Long comentarioId,
+            @RequestParam(value = "login") String login
+    ) {
+        Topico t = forumService.obterTopico(topicoId);
+        Comentario c = forumService.obterComentario(comentarioId);
+        forumService.gostarComentario(login, topicoId, comentarioId, c.getUsuario().getLogin());
+        return ResponseEntity.ok("comentário curtido com sucesso");
     }
 }

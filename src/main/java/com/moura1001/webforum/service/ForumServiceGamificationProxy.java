@@ -62,6 +62,11 @@ public class ForumServiceGamificationProxy implements ForumService {
     }
 
     @Override
+    public Comentario obterComentario(Long comentarioId) {
+        return forumServiceReal.obterComentario(comentarioId);
+    }
+
+    @Override
     public void gostarTopico(String usuario, Long topicoId, String usuarioTopico) {
         forumServiceReal.gostarTopico(usuario, topicoId, usuarioTopico);
 

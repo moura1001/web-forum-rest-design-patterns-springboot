@@ -17,6 +17,8 @@ public interface ForumService {
 
     List<Comentario> obterComentariosCadastrados(Long topicoId);
 
+    Comentario obterComentario(Long comentarioId);
+
     void gostarTopico(String usuario, Long topicoId, String usuarioTopico);
 
     void gostarComentario(String usuario, Long topicoId, Long comentarioId, String usuarioComentario);
