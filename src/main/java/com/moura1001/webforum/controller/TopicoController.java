@@ -48,7 +48,7 @@ public class TopicoController {
     public ResponseEntity<String> salvarComentario(
             @PathVariable Long id,
             @RequestBody @Valid ComentarioDTO comentario) {
-        Comentario comentarioSalvo = forumService.adicionarComentario(comentario.login(), comentario.topicoId(), comentario.conteudo());
+        Comentario comentarioSalvo = forumService.adicionarComentario(comentario.login(), id, comentario.conteudo());
         return ResponseEntity.created(
                 URI.create("/forum/api/v1/topicos/"+id+"/comentarios/"+comentarioSalvo.getId())
         ).body("comentário adicionado com sucesso");
