@@ -1,13 +1,13 @@
 package com.moura1001.webforum.service;
 
-import com.moura1001.webforum.model.Badge;
-import com.moura1001.webforum.model.Points;
-import com.moura1001.webforum.model.Usuario;
+import com.moura1001.webforum.model.*;
 import com.moura1001.webforum.service.storage.AchievementStorage;
 import com.moura1001.webforum.service.storage.AchievementStorageFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
 
 @Component("forumServiceGamificationProxy")
 public class ForumServiceGamificationProxy implements ForumService {
@@ -20,8 +20,8 @@ public class ForumServiceGamificationProxy implements ForumService {
     private AchievementStorageFactory achievementStorageFactory;
 
     @Override
-    public void adicionarTopico(String usuario, String tituloTopico, String conteudoTopico) {
-        forumServiceReal.adicionarTopico(usuario, tituloTopico, conteudoTopico);
+    public Topico adicionarTopico(String usuario, String tituloTopico, String conteudoTopico) {
+        Topico t = forumServiceReal.adicionarTopico(usuario, tituloTopico, conteudoTopico);
 
         AchievementStorage storage = achievementStorageFactory.getAchievementStorage();
         Usuario u = new Usuario(usuario, "");
@@ -29,11 +29,23 @@ public class ForumServiceGamificationProxy implements ForumService {
         Badge b = new Badge("I CAN TALK", u);
         storage.adicionarAchievement(usuario, p);
         storage.adicionarAchievement(usuario, b);
+
+        return t;
     }
 
     @Override
-    public void adicionarComentario(String usuario, Long topicoId, String comentario) {
-        forumServiceReal.adicionarComentario(usuario, topicoId, comentario);
+    public List<Topico> obterTopicosCadastrados() {
+        return forumServiceReal.obterTopicosCadastrados();
+    }
+
+    @Override
+    public Topico obterTopico(Long topicoId) {
+        return forumServiceReal.obterTopico(topicoId);
+    }
+
+    @Override
+    public Comentario adicionarComentario(String usuario, Long topicoId, String comentario) {
+        Comentario c = forumServiceReal.adicionarComentario(usuario, topicoId, comentario);
 
         AchievementStorage storage = achievementStorageFactory.getAchievementStorage();
         Usuario u = new Usuario(usuario, "");
@@ -41,6 +53,12 @@ public class ForumServiceGamificationProxy implements ForumService {
         Badge b = new Badge("LET ME ADD", u);
         storage.adicionarAchievement(usuario, p);
         storage.adicionarAchievement(usuario, b);
+
+        return c;
+    }
+
+    public List<Comentario> obterComentariosCadastrados(Long topicoId) {
+        return forumServiceReal.obterComentariosCadastrados(topicoId);
     }
 
     @Override

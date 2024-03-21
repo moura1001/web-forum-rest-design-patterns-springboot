@@ -9,6 +9,8 @@ import com.moura1001.webforum.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 @Component("forumServiceImpl")
 public class ForumServiceImpl implements ForumService {
 
@@ -22,22 +24,38 @@ public class ForumServiceImpl implements ForumService {
     private ComentarioRepository comentarioRepository;
 
     @Override
-    public void adicionarTopico(String usuario, String tituloTopico, String conteudoTopico) {
+    public Topico adicionarTopico(String usuario, String tituloTopico, String conteudoTopico) {
         Usuario u = usuarioRepository.findByLogin(usuario).orElseThrow(() -> {
             throw new RuntimeException("usuário não existe");
         });
-        topicoRepository.save(new Topico(tituloTopico, conteudoTopico, u));
+        return topicoRepository.save(new Topico(tituloTopico, conteudoTopico, u));
     }
 
     @Override
-    public void adicionarComentario(String usuario, Long topicoId, String comentario) {
+    public List<Topico> obterTopicosCadastrados() {
+        return topicoRepository.findAllByOrderByIdDesc();
+    }
+
+    @Override
+    public Topico obterTopico(Long topicoId) {
+        return topicoRepository.findById(topicoId).orElseThrow(() -> {
+            throw new RuntimeException("tópico não existe");
+        });
+    }
+
+    @Override
+    public Comentario adicionarComentario(String usuario, Long topicoId, String comentario) {
         Usuario u = usuarioRepository.findByLogin(usuario).orElseThrow(() -> {
             throw new RuntimeException("usuário não existe");
         });
         Topico t = topicoRepository.findById(topicoId).orElseThrow(() -> {
             throw new RuntimeException("tópico não existe");
         });
-        comentarioRepository.save(new Comentario(comentario, u, t));
+        return comentarioRepository.save(new Comentario(comentario, u, t));
+    }
+
+    public List<Comentario> obterComentariosCadastrados(Long topicoId) {
+        return comentarioRepository.findAllByTopicoId(topicoId);
     }
 
     @Override
